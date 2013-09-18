@@ -70,7 +70,7 @@ class ModelPopulator(object):
                     if not field.null:
                         try :
                             # try to retrieve random object from relatedModel
-                            relatedModel.objects.order_by('?')[0]
+                            return relatedModel.objects.order_by('?')[0]
                         except IndexError:
                             raise Exception('Relation "%s.%s" with "%s" cannot be null, check order of addEntity list' % (
                                 field.model.__name__, field.name, relatedModel.__name__,
