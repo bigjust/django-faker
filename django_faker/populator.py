@@ -175,7 +175,7 @@ class Populator(object):
             raise AttributeError('No class found from entities. Did you add entities to the Populator ?')
         klass = klass[0]
 
-        return klass.objects._db
+        return klass.objects.db
 
 
 
