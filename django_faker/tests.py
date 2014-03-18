@@ -11,6 +11,10 @@ fake = Faker()
 
 class Game(models.Model):
 
+    STATUSES = ((0, 'Created'),
+                (1, 'Started'),
+                (2, 'Finished'),)
+
     title= models.CharField(max_length=200)
     slug= models.SlugField(max_length=200)
     description= models.TextField()
@@ -19,7 +23,7 @@ class Game(models.Model):
     updated_time= models.TimeField()
     active= models.BooleanField()
     max_score= models.BigIntegerField()
-
+    status = models.SmallIntegerField(choices=STATUSES)
 
 class Player(models.Model):
 

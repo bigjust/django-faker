@@ -13,8 +13,11 @@ class FieldTypeGuesser(object):
         self.generator = generator
 
     def guessFormat(self, field):
-
         generator = self.generator
+
+        if field.choices:
+            return lambda x: generator.random_element(field.choices)[0]
+
         if isinstance(field, BooleanField): return lambda x: generator.boolean()
         if isinstance(field, NullBooleanField): return lambda x: generator.null_boolean()
         if isinstance(field, DecimalField): return lambda x: generator.pydecimal(rightDigits=field.decimal_places)
@@ -22,10 +25,7 @@ class FieldTypeGuesser(object):
         if isinstance(field, IntegerField): return lambda x: generator.random_int(0,4294967295)
         if isinstance(field, BigIntegerField): return lambda x: generator.random_int(0,18446744073709551615)
         if isinstance(field, FloatField): return lambda x: generator.pyfloat()
-        if isinstance(field, CharField):
-            if field.choices:
-                return lambda x: generator.random_element(field.choices)[0]
-            return lambda x: generator.text(field.max_length) if field.max_length >= 5 else generator.word()
+        if isinstance(field, CharField):  return lambda x: generator.text(field.max_length) if field.max_length >= 5 else generator.word()
         if isinstance(field, TextField): return lambda x: generator.text()
 
         if isinstance(field, DateTimeField): return lambda x: generator.date_time()
