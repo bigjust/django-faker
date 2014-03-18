@@ -49,6 +49,8 @@ class Action(models.Model):
     actor= models.ForeignKey(Player, related_name='actions', null=True)
     target= models.ForeignKey(Player, related_name='enemy_actions+', null=True)
 
+    game = models.ForeignKey(Game)
+
 
 class PopulatorTestCase(unittest.TestCase):
 
@@ -209,4 +211,3 @@ class APIDjangoFakerTestCase(unittest.TestCase):
 
         self.assertEqual( DjangoFaker().getPopulator(locale='it_IT'), DjangoFaker().getPopulator(locale='it_IT') )
         self.assertIs( DjangoFaker().getPopulator(locale='it_IT'), DjangoFaker().getPopulator(locale='it_IT') )
-        

@@ -59,21 +59,18 @@ class ModelPopulator(object):
         fieldTypeGuesser = FieldTypeGuesser(generator)
 
         for field in model._meta.fields:
-        #            yield field.name, getattr(self, field.name)
             fieldName = field.name
             if isinstance(field, (ForeignKey,ManyToManyField,OneToOneField)):
-                relatedModel = field.rel.to
-
-                def build_relation(inserted):
-                    if relatedModel in inserted and inserted[relatedModel]:
-                        return relatedModel.objects.get(pk=random.choice(inserted[relatedModel]))
+                def build_relation(inserted, related_model=field.rel.to):
+                    if related_model in inserted and inserted[related_model]:
+                        return related_model.objects.get(pk=random.choice(inserted[related_model]))
                     if not field.null:
                         try :
                             # try to retrieve random object from relatedModel
-                            return relatedModel.objects.order_by('?')[0]
+                            return related_model.objects.order_by('?')[0]
                         except IndexError:
                             raise Exception('Relation "%s.%s" with "%s" cannot be null, check order of addEntity list' % (
-                                field.model.__name__, field.name, relatedModel.__name__,
+                                field.model.__name__, field.name, related_model.__name__,
                             ))
                     return None
 
@@ -105,7 +102,6 @@ class ModelPopulator(object):
                 setattr(obj, field, value)
 
         obj.save(using=using)
-
         return obj.pk
 
 
@@ -176,6 +172,3 @@ class Populator(object):
         klass = klass[0]
 
         return klass.objects.db
-
-
-
